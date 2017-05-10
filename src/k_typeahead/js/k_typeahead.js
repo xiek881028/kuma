@@ -42,7 +42,13 @@ window.k_typeahead = function k_typeahead(element, ops){
 			Box.style.display = 'none';
 			_this.Fn.position();
 			_element.parentNode.appendChild(Box);
-			Box.addEventListener('mousedown',_this.staticFn.boxMousedown);
+			if(Box.addEventListener){
+				Box.removeEventListener('mousedown',_this.staticFn.boxMousedown);
+				Box.addEventListener('mousedown',_this.staticFn.boxMousedown);
+			}else if(Box.attachEvent){
+				Box.detachEvent('onmousedown',_this.staticFn.boxMousedown);
+				Box.attachEvent('onmousedown',_this.staticFn.boxMousedown);
+			};
 		},
 		showBuild: function(data){//构建列表结构
 			if(Object.prototype.toString.call(data) === '[object Array]'){
@@ -122,27 +128,27 @@ window.k_typeahead = function k_typeahead(element, ops){
 			return text;
 		},
 		boxMousedown: function(e){//列表按下事件
-			var e = e || event;
-			if(e.target.nodeName.toLowerCase() == 'li' && e.target.parentNode.parentNode.className == 'k_typeahead'){//li点击事件
-				_element.value = _this.staticFn.getText(e.target);
-				ActiveFn(e.target);
+			var e = e || event,
+				target = e.target?e.target:e.srcElement;
+			if(target.nodeName.toLowerCase() == 'li' && target.parentNode.parentNode.className == 'k_typeahead'){//li点击事件
+				_element.value = _this.staticFn.getText(target);
+				ActiveFn(target);
 				ActiveLi = true;
 				IsActiveNoSearch = true;
 			};
 		},
-		elFocus: function(bool){//input焦点事件
-			if(bool){
-				(SearchEmpty || _element.value) && _this.staticFn.goSearch();
-				IsActiveNoSearch = false;
-				ActiveLi = false;
-			}else{
-				clearTimeout(Delay);
-				_this.Fn.show(false);
-				ActiveLi && _element.focus();//选中li后触发blur事件，让input重新获取焦点
-				if(UnMoveVal){
-					_element.value = UnMoveVal;
-					UnMoveVal = '';
-				};
+		elFocus: function(){//input获得焦点事件
+			(SearchEmpty || _element.value) && _this.staticFn.goSearch();
+			IsActiveNoSearch = false;
+			ActiveLi = false;
+		},
+		elBlur: function(){//input失去焦点事件
+			clearTimeout(Delay);
+			_this.Fn.show(false);
+			ActiveLi && _element.focus();//选中li后触发blur事件，让input重新获取焦点
+			if(UnMoveVal){
+				_element.value = UnMoveVal;
+				UnMoveVal = '';
 			};
 		},
 		elKeydown: function(e){//input按下事件
@@ -180,18 +186,30 @@ window.k_typeahead = function k_typeahead(element, ops){
 			};
 			OldVal = _element.value;
 		},
-	},
+	};
 	this.Fn = {
 		init : function(){
-			_element.removeEventListener('focus',_this.staticFn.elFocus);
-			_element.addEventListener('focus',_this.staticFn.elFocus.bind(this, true));
-			_element.removeEventListener('blur',_this.staticFn.elFocus);
-			_element.addEventListener('blur',_this.staticFn.elFocus.bind(this, false));
-			_element.removeEventListener('keyup',_this.staticFn.elKeyup);
-			_element.addEventListener('keyup',_this.staticFn.elKeyup);
-			_element.removeEventListener('keydown',_this.staticFn.elKeydown);
-			_element.addEventListener('keydown',_this.staticFn.elKeydown);
-			window.addEventListener('resize',_this.Fn.position);
+			if(window.addEventListener){
+				_element.removeEventListener('focus',_this.staticFn.elFocus);
+				_element.addEventListener('focus',_this.staticFn.elFocus);
+				_element.removeEventListener('blur',_this.staticFn.elBlur);
+				_element.addEventListener('blur',_this.staticFn.elBlur);
+				_element.removeEventListener('keyup',_this.staticFn.elKeyup);
+				_element.addEventListener('keyup',_this.staticFn.elKeyup);
+				_element.removeEventListener('keydown',_this.staticFn.elKeydown);
+				_element.addEventListener('keydown',_this.staticFn.elKeydown);
+				window.addEventListener('resize',_this.Fn.position);
+			}else if(window.attachEvent){
+				_element.detachEvent('onfocus',_this.staticFn.elFocus);
+				_element.attachEvent('onfocus',_this.staticFn.elFocus);
+				_element.detachEvent('onblur',_this.staticFn.elBlur);
+				_element.attachEvent('onblur',_this.staticFn.elBlur);
+				_element.detachEvent('onkeyup',_this.staticFn.elKeyup);
+				_element.attachEvent('onkeyup',_this.staticFn.elKeyup);
+				_element.detachEvent('onkeydown',_this.staticFn.elKeydown);
+				_element.attachEvent('onkeydown',_this.staticFn.elKeydown);
+				window.attachEvent('onresize',_this.Fn.position);
+			};
 			_this.staticFn.buildBase();
 		},
 		position: function(){

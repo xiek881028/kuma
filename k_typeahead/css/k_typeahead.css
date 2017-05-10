@@ -1,0 +1,36 @@
+/*!
+ * k_typeahead
+ * xiekai <xk285985285.qq.com>
+ * create: 2017/05/10
+ * since: 0.0.1
+ */
+ .k_typeahead{
+	margin:0;
+	padding:0;
+	border:1px solid #ccc;
+	box-sizing:border-box;
+	box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+.k_typeahead *{
+	margin:0;
+	padding:0;
+}
+.k_typeahead ul{
+	min-height:30px;
+}
+.k_typeahead ul li{
+	list-style-type: none;
+	font-size:14px;
+	height:30px;
+	line-height:30px;
+	color:#666;
+	padding:0 10px;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	cursor:pointer;
+}
+.k_typeahead ul li:hover,
+.k_typeahead ul li.active{
+	background:#ccc;
+}

@@ -41,7 +41,7 @@ new k_typeahead(element,{query [,otherOps...]});
 
 k_typeahead提高了一些自定义属性与方法， 您可以根据实际情况进行更改。
 
-###　样例
+### 样例
 
 ```sh
 new k_typeahead(element,{

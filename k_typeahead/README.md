@@ -205,7 +205,7 @@ CustomHeightLight是heightLight的高阶方法。比起heightLight，它会多�
 
 k_typeahead暴露了一些方法，在某些特殊场合，您可能希望运行这些方法来处理某些问题。
 
-###　样例
+### 样例
 
 ```sh
 //初始化k_typeahead，并寄存在变量中。

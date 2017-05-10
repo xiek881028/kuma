@@ -39,7 +39,7 @@ new k_typeahead(element,{query [,otherOps...]});
 
 ## 自定义设置
 
-k_typeahead提高了一些自定义属性与方法， 您可以根据实际情况进行更改。
+k_typeahead提供了一些自定义属性与方法， 您可以根据实际情况进行更改。
 
 ### 样例
 
@@ -116,6 +116,7 @@ className是给k_typeahead搜索提示列表基础结构最外层添加类名。
 返回：无
 
 query是在用户输入停止后触发的方法，用于对用户的查询进行处理。入参有两个，keyword为用户输入的查询词，callback为处理后的回调，接收处理好的列表数据。callback最少需传入一个数组参数，否则会抛出错误，callback可以接收更多的参数，具体作用在下面的buildList进行介绍。
+
 query不需要返回值。
 
 ### buildList
@@ -135,6 +136,7 @@ query不需要返回值。
 返回：txt （str）
 
 buildList允许自定义列表结构。方法的入参index，值为query方法中传入的数组的索引。入参list，值为query方法中传入的数组。如果您在query的callback中传入了更多的参数，他们会在buildList中原封不动的返回出来。您可以利用这些数据去帮助您更好的自定义列表的结构。
+
 在您构建完列表结构后，需要以字符串的形式将结构返回(return)出去。
 
 ### buildBase
@@ -150,7 +152,9 @@ buildList允许自定义列表结构。方法的入参index，值为query方法�
 返回：txt （str）
 
 buildBase允许自定义搜索提示列表的基础结构。默认情况下，搜索列表只是一个单纯的list，如果你想要给列表加上一个头部或一个尾部，可以使用此方法。
+
 buildBase只有一个入参list，值为搜索列表结构的字符串。您可以通过字符串拼接的方式加入您自定义的内容。
+
 在您构建完列表的基础结构后，需要以字符串的形式将结构返回(return)出去。
 
 ### activeFn
@@ -166,6 +170,7 @@ buildBase只有一个入参list，值为搜索列表结构的字符串。您可�
 返回：无
 
 activeFn允许增加用户选择某条查询后的交互效果。当用户用鼠标或回车选中某条数据后，k_typeahead会进行一系列的处理，比如关闭搜索提示列表，将用户选中的值放入input。如果您想进行额外的处理，可以使用此方法。activeFn只有一个入参element，值为用户选中数据的节点对象。
+
 activeFn不需要返回值。
 
 ### heightLight
@@ -181,7 +186,9 @@ activeFn不需要返回值。
 返回：txt （str）
 
 heightLight允许自定义用户选中后的高亮效果。k_typeahead默认会给匹配的单词加上strong标签进行加粗展示，但如果您想要别的提示效果，可以使用此方法。
+
 heightLight只有一个入参keyword，值为匹配到的需要重点显示的字符串。如果您想要换个颜色进行提示，可以通过字符串拼接的方式给它加上span标签并给上对应的样式。如果你不想要提示效果，将keyword直接返回出去就好。
+
 在您选择好提示效果后，需要以字符串的形式将结构返回(return)出去。
 
 ### CustomHeightLight
@@ -199,6 +206,7 @@ heightLight只有一个入参keyword，值为匹配到的需要重点显示的�
 返回：txt （str）
 
 CustomHeightLight是heightLight的高阶方法。比起heightLight，它会多一个入参，值为整个需要匹配的内容的html结构。调用此方法后，k_typeahead不会再进行匹配高亮处理，所有高亮效果都交由您自己定义。
+
 在您处理完成后，需要以字符串的形式将结构返回(return)出去。
 
 ## 方法

@@ -2,7 +2,8 @@
  * k_typeahead
  * xiekai <xk285985285.qq.com>
  * create: 2017/05/10
- * since: 0.0.1
+ * update: 2017/05/15
+ * since: 0.1.1
  */
 window.k_typeahead = function k_typeahead(element, ops){
 	var _this = this,
@@ -21,6 +22,7 @@ window.k_typeahead = function k_typeahead(element, ops){
 		ActiveFn = Ops.activeFn || function(){},
 		BuileBase = Ops.buildBase || function(ul){return ul},
 		CustomHeightLight = Ops.customHeightLight || '',
+		InputShowVal = Ops.inputShowVal || '',
 
 		Delay,
 		LiList,
@@ -67,7 +69,7 @@ window.k_typeahead = function k_typeahead(element, ops){
 						listTxt = '';
 					callData = callData.concat(argumentsArr);
 					listTxt = BuildList==undefined?data[i]:BuildList.apply(this,callData);
-					html += '<li title='+ data[i] +'>'+ _this.staticFn.heightLight(SaveVal,listTxt) +'</li>';
+					html += '<li>'+ _this.staticFn.heightLight(SaveVal,listTxt,data[i]) +'</li>';
 				};
 				html += '</ul>';
 				Box.innerHTML = BuileBase(html);
@@ -76,14 +78,14 @@ window.k_typeahead = function k_typeahead(element, ops){
 				throw new Error('query的callback接收的第一个参数必须是一个数组');
 			};
 		},
-		heightLight: function(keyword,txt){
+		heightLight: function(keyword,txt,data){
 			if(CustomHeightLight == ''){
 				var reg = new RegExp(keyword,"g"),
 					custom = HeightLight(keyword);
 				txt = txt.toString().replace(reg,(custom == undefined? '<strong>'+ keyword +'</strong>' : custom));
 				return txt;
 			}else{
-				return CustomHeightLight(keyword,txt);
+				return CustomHeightLight(keyword,txt,data);
 			};
 		},
 		goSearch: function(){//搜索方法
@@ -113,7 +115,7 @@ window.k_typeahead = function k_typeahead(element, ops){
 			};
 			if(index != -1){
 				LiList[index].className = 'active';
-				liVal = _this.staticFn.getText(LiList[index]);
+				liVal = InputShowVal == ''? _this.staticFn.getText(LiList[index]) : InputShowVal(LiList[index], _this.staticFn.getText);
 			}else{
 				liVal = SaveVal;
 			};
@@ -127,12 +129,26 @@ window.k_typeahead = function k_typeahead(element, ops){
 			};
 			return text;
 		},
+		isActiveLi: function(el){
+			if(el.nodeName.toLowerCase() == 'li'){
+				if(el.parentNode.parentNode.className === Box.className){
+					return el;
+				}else{
+					return _this.staticFn.isActiveLi(el.parentNode);
+				};
+			}else if(el.nodeName.toLowerCase() != 'li' && el.nodeName.toLowerCase() != 'html'){
+				return _this.staticFn.isActiveLi(el.parentNode);
+			}else{
+				return false;
+			};
+		},
 		boxMousedown: function(e){//列表按下事件
 			var e = e || event,
-				target = e.target?e.target:e.srcElement;
-			if(target.nodeName.toLowerCase() == 'li' && target.parentNode.parentNode.className == 'k_typeahead'){//li点击事件
-				_element.value = _this.staticFn.getText(target);
-				ActiveFn(target);
+				target = e.target?e.target:e.srcElement,
+				activeLi = _this.staticFn.isActiveLi(target);
+			if(activeLi !== false){//li点击事件
+				_element.value = (InputShowVal == ''? _this.staticFn.getText(activeLi) : InputShowVal(activeLi, _this.staticFn.getText));
+				ActiveFn(activeLi);
 				ActiveLi = true;
 				IsActiveNoSearch = true;
 			};

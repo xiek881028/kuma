@@ -115,7 +115,7 @@ className是给k_typeahead搜索提示列表基础结构最外层添加类名。
 
 返回：无
 
-query是在用户输入停止后触发的方法，用于对用户的查询进行处理。入参有两个，keyword为用户输入的查询词，callback为处理后的回调，接收处理好的列表数据。callback最少需传入一个数组参数，否则会抛出错误，callback可以接收更多的参数，具体作用在下面的buildList进行介绍。
+query是在用户输入停止后触发的方法，用于对用户的查询进行处理。入参有两个，keyword为用户输入的查询词，callback为处理后的回调，接收处理好的列表数据。callback最少需传入一个数组参数，否则会抛出错误。如果您不打算调用buildList拼接结构，则传入的数组必须为一维数组，否则程序将无法解析。callback可以接收更多的参数，具体作用在下面的buildList进行介绍。
 
 query不需要返回值。
 
@@ -169,9 +169,27 @@ buildBase只有一个入参list，值为搜索列表结构的字符串。您可�
 
 返回：无
 
-activeFn允许增加用户选择某条查询后的交互效果。当用户用鼠标或回车选中某条数据后，k_typeahead会进行一系列的处理，比如关闭搜索提示列表，将用户选中的值放入input。如果您想进行额外的处理，可以使用此方法。activeFn只有一个入参element，值为用户选中数据的节点对象。
+activeFn允许增加用户选择某条查询后的交互效果。当用户用鼠标或回车选中某条数据后，k_typeahead会进行一系列的处理，比如关闭搜索提示列表，将用户选中的值放入input。如果您想进行额外的处理，可以使用此方法。activeFn只有一个入参element，值为用户选中数据对应的Li节点。
 
 activeFn不需要返回值。
+
+### inputShowVal
+
+默认值：无
+
+类型：function
+
+入参：
+
+	element （object）
+
+	toTxt （function）
+
+返回：txt （str）
+
+inputShowVal允许自定义当使用键盘上下选择或鼠标确定时input内的显示值。入参element的值为用户当前选择数据对应的Li节点，toTxt是一个简易的将html结构转成txt文本的方法，功能类似jQuery的text()，您可以使用它把处理好的对象return出去。如果您有更好的实现方法或调用了其他插件实现该功能，您可以忽略该参数。
+
+在您处理完成后，需要以字符串的形式将结果返回(return)出去。
 
 ### heightLight
 
@@ -191,7 +209,7 @@ heightLight只有一个入参keyword，值为匹配到的需要重点显示的�
 
 在您选择好提示效果后，需要以字符串的形式将结构返回(return)出去。
 
-### CustomHeightLight
+### customHeightLight
 
 默认值：''
 
@@ -203,9 +221,11 @@ heightLight只有一个入参keyword，值为匹配到的需要重点显示的�
 
 	txt （str）
 
+	data （object）
+
 返回：txt （str）
 
-CustomHeightLight是heightLight的高阶方法。比起heightLight，它会多一个入参，值为整个需要匹配的内容的html结构。调用此方法后，k_typeahead不会再进行匹配高亮处理，所有高亮效果都交由您自己定义。
+customHeightLight是heightLight的高阶方法。比起heightLight，它会多两个入参，txt的值为整个需要匹配的内容的html结构。data为拼接结构时的对象。调用此方法后，k_typeahead不会再进行匹配高亮处理，所有高亮效果都交由您自己定义。
 
 在您处理完成后，需要以字符串的形式将结构返回(return)出去。
 

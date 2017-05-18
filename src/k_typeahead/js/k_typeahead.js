@@ -3,7 +3,7 @@
  * xiekai <xk285985285.qq.com>
  * create: 2017/05/10
  * update: 2017/05/18
- * since: 0.1.2
+ * since: 0.1.3
  */
 window.k_typeahead = function k_typeahead(element, ops){
 	var _this = this,
@@ -209,6 +209,7 @@ window.k_typeahead = function k_typeahead(element, ops){
 			var e = e || event;
 			if(e.keyCode != 38 && e.keyCode != 40 && e.keyCode != 13){
 				if(_element.value == '' && !SearchEmpty){
+					clearTimeout(Delay);
 					_this.Fn.show(false);
 				}else{
 					OldVal != _element.value && _this.staticFn.goSearch();

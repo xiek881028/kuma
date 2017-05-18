@@ -2,8 +2,8 @@
  * k_typeahead
  * xiekai <xk285985285.qq.com>
  * create: 2017/05/10
- * update: 2017/05/15
- * since: 0.1.1
+ * update: 2017/05/18
+ * since: 0.1.2
  */
 window.k_typeahead = function k_typeahead(element, ops){
 	var _this = this,
@@ -17,6 +17,7 @@ window.k_typeahead = function k_typeahead(element, ops){
 		BuildList = Ops.buildList,
 		SearchEmpty = Ops.searchEmpty || false,
 		ClassName = Ops.className || '',
+		ActiveBg = Ops.activeBg || '#ccc',
 		QueryFn = Ops.query || function(){},
 		HeightLight = Ops.heightLight || function(){},
 		ActiveFn = Ops.activeFn || function(){},
@@ -34,6 +35,7 @@ window.k_typeahead = function k_typeahead(element, ops){
 		SaveData = {},
 		UnMoveVal = '',
 		SaveVal = '',
+		GlobalData = [],
 		OldVal = '';
 	this.staticFn = {
 		buildBase: function(){//构建基础结构
@@ -56,7 +58,7 @@ window.k_typeahead = function k_typeahead(element, ops){
 			if(Object.prototype.toString.call(data) === '[object Array]'){
 				var html = '<ul class="k_typeaheadList">',
 					argumentsArr = [];
-				ListData = data;
+				GlobalData = data;
 				if(SaveData[SaveVal] == undefined){
 					SaveData[SaveVal] = data;
 				};
@@ -142,13 +144,25 @@ window.k_typeahead = function k_typeahead(element, ops){
 				return false;
 			};
 		},
+		index: function(el){
+			var _index = 0,
+				indexOf;
+			indexOf = function(_el){
+				if(_el.previousSibling != null){
+					_index ++;
+					indexOf(_el.previousSibling);
+				};
+			};
+			indexOf(el);
+			return _index;
+		},
 		boxMousedown: function(e){//列表按下事件
 			var e = e || event,
 				target = e.target?e.target:e.srcElement,
 				activeLi = _this.staticFn.isActiveLi(target);
 			if(activeLi !== false){//li点击事件
 				_element.value = (InputShowVal == ''? _this.staticFn.getText(activeLi) : InputShowVal(activeLi, _this.staticFn.getText));
-				ActiveFn(activeLi);
+				ActiveFn(GlobalData, _this.staticFn.index(activeLi), activeLi);
 				ActiveLi = true;
 				IsActiveNoSearch = true;
 			};
@@ -173,12 +187,12 @@ window.k_typeahead = function k_typeahead(element, ops){
 				if(ActiveIndex > -1){
 				ActiveIndex--;
 				}else{
-					ActiveIndex = ListData.length-1;
+					ActiveIndex = GlobalData.length-1;
 				};
 				GhostAtvIndex = ActiveIndex;
 				_this.staticFn.setActiveLi(ActiveIndex);
 			}else if(+e.keyCode == 40){//方向键下
-				if(ActiveIndex < ListData.length-1){
+				if(ActiveIndex < GlobalData.length-1){
 					ActiveIndex++;
 				}else{
 					ActiveIndex = -1;
@@ -187,7 +201,7 @@ window.k_typeahead = function k_typeahead(element, ops){
 				_this.staticFn.setActiveLi(ActiveIndex);
 			}else if(+e.keyCode == 13){//回车键
 				_this.Fn.show(false);
-				ActiveFn(LiList[GhostAtvIndex]);
+				ActiveFn(GlobalData, GhostAtvIndex, LiList[GhostAtvIndex]);
 				UnMoveVal = '';
 			};
 		},

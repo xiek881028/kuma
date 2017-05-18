@@ -165,11 +165,15 @@ buildBase只有一个入参list，值为搜索列表结构的字符串。您可�
 
 入参：
 
+	data （array）
+
+	index （number）
+
 	element （object）
 
 返回：无
 
-activeFn允许增加用户选择某条查询后的交互效果。当用户用鼠标或回车选中某条数据后，k_typeahead会进行一系列的处理，比如关闭搜索提示列表，将用户选中的值放入input。如果您想进行额外的处理，可以使用此方法。activeFn只有一个入参element，值为用户选中数据对应的Li节点。
+activeFn允许增加用户选择某条查询后的交互效果。当用户用鼠标或回车选中某条数据后，k_typeahead会进行一系列的处理，比如关闭搜索提示列表，将用户选中的值放入input。如果您想进行额外的处理，可以使用此方法。activeFn有三个参数。第一个data是传入的数组；第二个index是当前选中数据的索引；第三个是element，值为用户选中数据对应的Li节点。
 
 activeFn不需要返回值。
 

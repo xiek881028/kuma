@@ -2,8 +2,8 @@
  * k_typeahead
  * xiekai <xk285985285.qq.com>
  * create: 2017/05/10
- * update: 2017/05/18
- * since: 0.1.3
+ * update: 2017/06/12
+ * since: 0.1.4
  */
 window.k_typeahead = function k_typeahead(element, ops){
 	var _this = this,
@@ -46,6 +46,7 @@ window.k_typeahead = function k_typeahead(element, ops){
 			Box.style.display = 'none';
 			_this.Fn.position();
 			_element.parentNode.appendChild(Box);
+			_element.setAttribute && _element.setAttribute('autocomplete','off');
 			if(Box.addEventListener){
 				Box.removeEventListener('mousedown',_this.staticFn.boxMousedown);
 				Box.addEventListener('mousedown',_this.staticFn.boxMousedown);
